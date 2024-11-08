@@ -1,0 +1,4 @@
+repository "OmniumProject@skalap2endra@cloud"
+  path "/"
+    br "/main"
+    co "/main"
