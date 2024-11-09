@@ -4,5 +4,4 @@ public enum AiState
     Idle = 1,
     MoveToTarget = 2,
     Attack = 3,
-
 }

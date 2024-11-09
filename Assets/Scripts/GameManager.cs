@@ -1,18 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private ENDGAME endGame;
+    [SerializeField] private HUD hud;
+    [SerializeField] private PlayerCharacter player;
+    private string currentSceneName;
+    private bool isGameDone;
+
+    private void Awake()
     {
-        
+        isGameDone = false;
+        currentSceneName = SceneManager.GetActiveScene().name;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
+        if (!player.LiveComponent.IsAlive)
+        {
+            EndGame();
+        }
         
+
+        if (Input.GetKeyDown(KeyCode.R) && isGameDone)
+            SceneManager.LoadScene(currentSceneName);
+    }
+
+    private void EndGame()
+    {
+        hud.ToggleHud();
+        endGame.ActiveDeathScene();
+        isGameDone=true;
     }
 }

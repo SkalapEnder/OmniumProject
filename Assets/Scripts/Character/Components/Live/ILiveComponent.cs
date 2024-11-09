@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ILiveComponent
+public interface ILiveComponent : ICharacterComponent
 {
+    public bool IsAlive { get; }
+
     public float MaxHealth { get; }
 
     public float Health { get; }

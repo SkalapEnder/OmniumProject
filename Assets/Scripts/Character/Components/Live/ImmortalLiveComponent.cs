@@ -4,11 +4,21 @@ using UnityEngine;
 
 public class ImmortalLiveComponent : ILiveComponent
 {
-    float ILiveComponent.MaxHealth { get => 1; }
-    float ILiveComponent.Health { get => 1; }
+    private Character character;
+
+    public float MaxHealth => 1;
+
+    public float Health => 1;
+
+    public bool IsAlive => true;
+
+    public void Initialize(Character character)
+    {
+        this.character = character;
+    }
 
     public void SetDamage(float damage)
     {
-        Debug.Log("I am mortal!");
+        Debug.Log("I am immortal!");
     }
 }

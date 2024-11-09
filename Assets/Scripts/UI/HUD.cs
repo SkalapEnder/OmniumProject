@@ -6,16 +6,29 @@ using UnityEngine;
 public class HUD : MonoBehaviour
 {
     [SerializeField] private PlayerCharacter player;
+    [SerializeField] private CanvasGroup hud;
+    [SerializeField] private TextMeshProUGUI hudHP;
 
-    [SerializeField] private TextMeshPro lifeText;
+    private bool isHidden;
 
-    public TextMeshPro LifeText
+    public bool IsHidden
     {
-        get => lifeText; 
-        set 
-        {
-            lifeText.text = "HP: " + value.ToString();
-        }
+        get => isHidden;
+        set => isHidden = value;
     }
 
+    private void Update()
+    {
+        UpdateHP(player.LiveComponent.Health);
+    }
+
+    private void UpdateHP(float healthNum)
+    {
+        hudHP.text = "HP: " + healthNum.ToString();
+    }
+
+    public void ToggleHud()
+    {
+        hud.alpha = isHidden ? 1 : 0;
+    }
 }

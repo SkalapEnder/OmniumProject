@@ -5,21 +5,19 @@ using UnityEngine;
 
 public class CharacterLiveComponent : ILiveComponent
 {
-    private float currentHealth;
+    private Character character;
+    protected float currentHealth;
+    protected float maxHealth;
 
-    private bool isDead;
+    private bool isAlive;
 
-    [SerializeField] private HUD hud;
-
-    public bool IsDead
+    public bool IsAlive
     {
-        get => isDead;
-        private set => isDead = value;
+        get => isAlive;
+        private set => isAlive = value;
     }
 
-
-    public float MaxHealth => 50;
-
+    public float MaxHealth => maxHealth;
 
     public float Health 
     { 
@@ -33,15 +31,11 @@ public class CharacterLiveComponent : ILiveComponent
             if (currentHealth <= 0)
             {
                 currentHealth = 0;
-                SetDeath();
+                IsAlive = false;
             }
+                
+                
         } 
-    }
-
-    public CharacterLiveComponent()
-    {
-        IsDead = false;
-        Health = MaxHealth;
     }
 
     public void SetDamage(float damage)
@@ -49,8 +43,11 @@ public class CharacterLiveComponent : ILiveComponent
         Health -= damage;
     }
 
-    private void SetDeath()
+    public void Initialize(Character character)
     {
-        IsDead = true;
+        this.character = character;
+        maxHealth = character.CharacterData.DefaultMaxHealth;
+        Health = maxHealth;
+        IsAlive = true;
     }
 }

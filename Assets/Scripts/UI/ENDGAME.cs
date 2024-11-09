@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ENDGAME : MonoBehaviour
 {
-
-    void Update()
+    [SerializeField] private CanvasGroup endGameGroup;
+    public void ActiveDeathScene()
     {
-        if (true) { }
+        endGameGroup.alpha = 1;
     }
 }

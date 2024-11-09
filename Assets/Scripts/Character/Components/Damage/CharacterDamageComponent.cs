@@ -4,7 +4,24 @@ using UnityEngine;
 
 public class CharacterDamageComponent : IDamageComponent
 {
-    public float Damage => 10;
+    private Character character;
+    private CharacterData characterData;
+
+    private float _damage;
+    private float _range;
+
+    public float Damage => _damage;
+
+    public float AttackRange => _range;
+
+    public void Initialize(Character character)
+    {
+        this.character = character;
+        characterData = character.CharacterData;
+
+        _damage = characterData.DefaultDamage;
+        _range = characterData.DefaultRange;
+    }
 
     public void MakeDamage(Character characterTarget)
     {
