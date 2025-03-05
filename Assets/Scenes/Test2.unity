@@ -717,7 +717,7 @@ MonoBehaviour:
   maxHealth: 40
   damage: 25
   rangeOfAttack: 2
-  timeBetweenAttacks: 1
+  timeBetweenAttacks: 0.5
   characterTransform: {fileID: 842455922}
   characterController: {fileID: 842455921}
 --- !u!143 &842455921
@@ -1782,14 +1782,14 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 0.6603774, g: 0.6572624, b: 0.6572624, a: 1}
+  m_Color: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 1}
   m_Intensity: 1.75
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 1
   m_Shadows:
-    m_Type: 1
+    m_Type: 0
     m_Resolution: 3
     m_CustomResolution: -1
     m_Strength: 1
