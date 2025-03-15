@@ -11,7 +11,7 @@ public class GameData : ScriptableObject
     [Space(20)]
     [SerializeField] private float minEnemySpawnOffset = 7;
     [SerializeField] private float maxEnemySpawnOffset = 18;
-    [SerializeField][Range(1, 100)] private int maxEntityNumberAtTime = 20;
+    [SerializeField] private int maxEntityNumberAtTime = 20;
 
 
     public int SessionTimeMinutes => sessionTimeMinutes;
@@ -19,5 +19,9 @@ public class GameData : ScriptableObject
     public float TimeBetweenEnemySpawn => timeBetweenEnemySpawn;
     public float MinEnemySpawnOffset => minEnemySpawnOffset;
     public float MaxEnemySpawnOffset => maxEnemySpawnOffset;
-    public int MaxEntityNumberAtTime => maxEntityNumberAtTime;
+    public int MaxEntityNumberAtTime 
+    {
+        get { return maxEntityNumberAtTime; }
+        set { maxEntityNumberAtTime = value; }
+    }
 }

@@ -73,11 +73,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b39f062f9c43e8143aa93d435ddfb4fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
-  health: 5
+  speed: 4.6
+  health: 40
   maxHealth: 40
-  damage: 25
+  viewDistance: 20
   rangeOfAttack: 2
+  damage: 15
   timeBetweenAttacks: 0.5
   scoreCost: 20
   characterTransform: {fileID: 5294747852110629707}

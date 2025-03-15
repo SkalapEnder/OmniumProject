@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GameData
   m_EditorClassIdentifier: 
   sessionTimeMinutes: 5
-  timeBetweenEnemySpawn: 0.5
-  minEnemySpawnOffset: 7
-  maxEnemySpawnOffset: 15
-  maxEntityNumberAtTime: 13
+  timeBetweenEnemySpawn: 0.2
+  minEnemySpawnOffset: 10
+  maxEnemySpawnOffset: 18
+  maxEntityNumberAtTime: 12

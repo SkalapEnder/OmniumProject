@@ -9,13 +9,15 @@ public class EnemyLogicComponent : ILogicComponent
 
     private float cooldownAttack = 0.0f;
     private Vector3 direction;
-    private float _range;
+    private float _attackRange;
+    private float _viewRange;
 
     public void Initialize(Character character)
     {
         this.character = character;
         characterData = character.CharacterData;
-        _range = character.DamageComponent.AttackRange;
+        _attackRange = character.DamageComponent.AttackRange;
+        _viewRange = characterData.DefaultView;
     }
 
     public void checkState(Character targetCharacter, ref AiState currentState)
@@ -35,7 +37,7 @@ public class EnemyLogicComponent : ILogicComponent
                 break;
 
             case AiState.Idle:
-                if (distance < 10)
+                if (distance < _viewRange)
                 {
                     currentState = AiState.MoveToTarget;
                 }
@@ -45,11 +47,11 @@ public class EnemyLogicComponent : ILogicComponent
                 character.MovementComponent.Move(direction);
                 character.MovementComponent.Rotation(direction);
 
-                if (distance >= 10)
+                if (distance >= _viewRange)
                 {
                     currentState = AiState.Idle;
                 }
-                else if (distance < _range)
+                else if (distance < _attackRange)
                 {
                     currentState = AiState.Attack;
                 }
@@ -66,7 +68,7 @@ public class EnemyLogicComponent : ILogicComponent
 
                 cooldownAttack = Mathf.Max(0, cooldownAttack - Time.deltaTime);
 
-                if (distance >= _range)
+                if (distance >= _attackRange)
                 {
                     currentState = AiState.MoveToTarget;
                 }

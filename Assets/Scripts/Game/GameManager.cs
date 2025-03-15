@@ -5,13 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private GameData gameData; 
+    [SerializeField] private GameData gameData;
     [SerializeField] private CharacterFactory characterFactory;
     private ScoreSystem scoreSystem;
+    private CharacterSpawnController spawnController;
 
     private float gameSessionTime;
-    private float timeBetweenEnemySpawn;
-    private int entityNumberAtTime;
     private bool isGameActive;
 
     public static GameManager Instance { get; private set; }
@@ -24,16 +23,19 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
             Initialize();
-        } 
-        else {
+        }
+        else
+        {
             Destroy(this.gameObject);
         }
     }
 
     private void Initialize()
     {
-       scoreSystem = new ScoreSystem();
-       isGameActive = false;
+        scoreSystem = new ScoreSystem();
+        spawnController = new CharacterSpawnController();
+        spawnController.Initialize(characterFactory, gameData);
+        isGameActive = false;
     }
 
     public void StartGame()
@@ -48,30 +50,20 @@ public class GameManager : MonoBehaviour
         player.LiveComponent.OnCharacterDeath += CharacterDeathHandler;
 
         gameSessionTime = 0;
-        entityNumberAtTime = 1;
-        timeBetweenEnemySpawn = gameData.TimeBetweenEnemySpawn;
-        
+
+        spawnController.Initialize(characterFactory, gameData);
         scoreSystem.StartGame();
         isGameActive = true;
     }
 
     private void Update()
     {
-        if(!isGameActive) return;
+        if (!isGameActive) return;
 
+        spawnController.UpdateSpawn(Time.deltaTime);
         gameSessionTime += Time.deltaTime;
-        timeBetweenEnemySpawn -= Time.deltaTime;
 
-        if (timeBetweenEnemySpawn < 0)
-        {
-            if (entityNumberAtTime < gameData.MaxEntityNumberAtTime)
-            {
-                SpawnEnemy();
-            }
-            timeBetweenEnemySpawn = gameData.TimeBetweenEnemySpawn;
-        }
-
-        if(gameSessionTime > gameData.SessionTimeSeconds)
+        if (gameSessionTime > gameData.SessionTimeSeconds)
         {
             GameVictory();
         }
@@ -79,38 +71,13 @@ public class GameManager : MonoBehaviour
 
     private void CharacterDeathHandler(Character deadCharacter)
     {
-        switch (deadCharacter.CharacterType)
+        if (deadCharacter.CharacterType == CharacterType.Player)
         {
-            case CharacterType.Player:
-                GameOver();
-                break;
-
-            case CharacterType.EnemyDefault:
-                scoreSystem.AddScore(deadCharacter.CharacterData.ScoreCost);
-                break;
+            GameOver();
         }
-
-        deadCharacter.gameObject.SetActive(false);
-        characterFactory.ReturnCharacter(deadCharacter);
-        deadCharacter.LiveComponent.OnCharacterDeath -= CharacterDeathHandler;
-        entityNumberAtTime -= 1;
-    }
-
-    private void SpawnEnemy()
-    {
-        Character enemy = CharacterFactory.GetCharacter(CharacterType.EnemyDefault);
-        Vector3 playerPosition = characterFactory.Player.transform.position;
-        enemy.transform.position = new Vector3(playerPosition.x + GetOffset(), 0, playerPosition.z + GetOffset());
-        enemy.gameObject.SetActive(true);
-        enemy.Initialize();
-        enemy.LiveComponent.OnCharacterDeath += CharacterDeathHandler;
-        entityNumberAtTime += 1;
-
-        float GetOffset()
+        else if (deadCharacter.CharacterType == CharacterType.EnemyDefault)
         {
-            bool isPlus = Random.Range(0, 100) % 2 != 0;
-            float offset = Random.Range(gameData.MinEnemySpawnOffset, gameData.MaxEnemySpawnOffset);
-            return (isPlus) ? offset : (-1 * offset);
+            scoreSystem.AddScore(deadCharacter.CharacterData.ScoreCost);
         }
     }
 
