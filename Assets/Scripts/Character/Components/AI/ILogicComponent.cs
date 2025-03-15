@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface ILogicComponent : ICharacterComponent
 {
-    void checkState(Character targetCharacter, AiState currentState);
+    void checkState(Character targetCharacter, ref AiState currentState);
 }

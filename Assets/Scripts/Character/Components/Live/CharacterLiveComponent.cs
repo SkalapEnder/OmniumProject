@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -5,11 +6,13 @@ using UnityEngine;
 
 public class CharacterLiveComponent : ILiveComponent
 {
-    private Character character;
+    private Character selfCharacter;
     protected float currentHealth;
     protected float maxHealth;
 
     private bool isAlive;
+
+    public event Action<Character> OnCharacterDeath;
 
     public bool IsAlive
     {
@@ -32,20 +35,26 @@ public class CharacterLiveComponent : ILiveComponent
             {
                 currentHealth = 0;
                 IsAlive = false;
+                SetDeath();
             }
-                
                 
         } 
     }
 
     public void SetDamage(float damage)
     {
+        Debug.Log("Ouch! " + damage + " " + (Health - damage));
         Health -= damage;
+    }
+
+    public void SetDeath()
+    {
+        OnCharacterDeath?.Invoke(selfCharacter);
     }
 
     public void Initialize(Character character)
     {
-        this.character = character;
+        this.selfCharacter = character;
         maxHealth = character.CharacterData.DefaultMaxHealth;
         Health = maxHealth;
         IsAlive = true;

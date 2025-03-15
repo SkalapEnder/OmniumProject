@@ -4,9 +4,13 @@ using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 {
+    [SerializeField] private CharacterType characterType;
     [SerializeField] protected CharacterData characterData;
-    public CharacterData CharacterData => characterData;
 
+
+    public virtual Character TargetCharacter { get; }
+    public CharacterType CharacterType => characterType;
+    public CharacterData CharacterData => characterData;
     public IMovable MovementComponent { get; protected set; }
     public ILiveComponent LiveComponent { get; protected set; }
     public IDamageComponent DamageComponent { get; protected set; }

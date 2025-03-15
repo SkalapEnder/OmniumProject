@@ -11,6 +11,8 @@ public class CharacterData : MonoBehaviour
     [SerializeField] private float damage;
     [SerializeField] private float rangeOfAttack;
     [SerializeField] private float timeBetweenAttacks;
+
+    [SerializeField] private int scoreCost;
     [SerializeField] private Transform characterTransform;
     [SerializeField] private CharacterController characterController;
 
@@ -28,6 +30,7 @@ public class CharacterData : MonoBehaviour
     public float DefaultMaxHealth => maxHealth;
     
     // Others Section
+    public int ScoreCost => scoreCost;
     public Transform CharacterTransform => characterTransform;
     public CharacterController CharacterController
     { 

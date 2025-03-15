@@ -37,7 +37,7 @@ public class CharacterMovementComponent : IMovable
         if (direction == Vector3.zero)
             return;
 
-        float smooth = 0.05f;
+        float smooth = 0.03f;
         float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
         float angle = Mathf.SmoothDampAngle(characterData.CharacterTransform.eulerAngles.y, targetAngle, ref smooth, smooth);
         characterData.CharacterTransform.rotation = Quaternion.Euler(0, angle, 0);

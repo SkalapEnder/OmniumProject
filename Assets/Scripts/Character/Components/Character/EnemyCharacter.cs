@@ -5,19 +5,16 @@ using UnityEngine.TextCore.Text;
 
 public class EnemyCharacter : Character
 {
-    [SerializeField] private Character targetCharacter;
     [SerializeField] private AiState currentState;
 
-    private float cooldownAttack = 0.0f;
-    private Vector3 direction;
+    public override Character TargetCharacter => 
+        GameManager.Instance.CharacterFactory.Player;
 
-    private float _range;
-
-    public void Start()
+    public override void Initialize()
     {
         base.Initialize();
 
-        LiveComponent = new ImmortalLiveComponent();
+        LiveComponent = new CharacterLiveComponent();
         LiveComponent.Initialize(this);
 
         DamageComponent = new CharacterDamageComponent();
@@ -25,68 +22,11 @@ public class EnemyCharacter : Character
 
         LogicComponent = new EnemyLogicComponent();
         LogicComponent.Initialize(this);
-
-        _range = DamageComponent.AttackRange;
     }
 
     public override void Update()
     {
-        direction = targetCharacter.transform.position - characterData.transform.position;
-        direction.Normalize();
-
-        switch (currentState)
-        {
-            case AiState.None: break; // AI Disabled
-
-            case AiState.Idle:
-                if (Vector3.Distance(targetCharacter.transform.position, characterData.transform.position) < 10)
-                {
-                    currentState = AiState.MoveToTarget;
-                    break;
-                }
-                //LookAround();
-                break;
-
-            case AiState.MoveToTarget:
-                MovementComponent.Move(direction);
-                MovementComponent.Rotation(direction);
-
-                if (Vector3.Distance(targetCharacter.transform.position, characterData.transform.position) >= 10)
-                {
-                    currentState = AiState.Idle;
-                    break;
-                }
-
-
-                if (Vector3.Distance(targetCharacter.transform.position, characterData.transform.position) < _range)
-                {
-                    currentState = AiState.Attack;
-                    break;
-                }
-
-
-                break;
-
-            case AiState.Attack:
-                MovementComponent.Move(direction);
-                MovementComponent.Rotation(direction);
-
-                if (cooldownAttack <= 0)
-                {
-                    DamageComponent.MakeDamage(targetCharacter);
-                    cooldownAttack = characterData.TimeBetweenAttacks;
-                }
-
-                if (cooldownAttack > 0)
-                    cooldownAttack -= Time.deltaTime;
-
-                if (Vector3.Distance(targetCharacter.transform.position, characterData.transform.position) >= _range)
-                {
-                    currentState = AiState.MoveToTarget;
-                    break;
-                }
-
-                break;
-        }
+        // Use pointer to change currentState there, not in LogicComponent
+        LogicComponent.checkState(TargetCharacter, ref currentState);
     }
 }
