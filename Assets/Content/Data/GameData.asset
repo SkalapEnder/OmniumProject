@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f885ecaca0722a6408948f0b0550a6dc, type: 3}
   m_Name: GameData
   m_EditorClassIdentifier: 
-  sessionTimeMinutes: 5
-  timeBetweenEnemySpawn: 0.2
-  minEnemySpawnOffset: 10
+  sessionTimeMinutes: 1
+  timeBetweenEnemySpawn: 10
+  minEnemySpawnOffset: 12
   maxEnemySpawnOffset: 18
-  maxEntityNumberAtTime: 12
+  maxEntityNumberAtTime: 15

@@ -8,6 +8,9 @@ public class CharacterMovementComponent : IMovable
     private Character character;
     private CharacterData characterData;
 
+    public Vector3 Position =>
+        characterData.CharacterTransform.position;
+
     private float speed;
 
     public float Speed
@@ -15,21 +18,25 @@ public class CharacterMovementComponent : IMovable
         get => speed;
         set
         {
-            if (value < 0)
-                return;
-            speed = value;
+            if (value > 0)
+                speed = value;
         }
     }
 
     public void Move(Vector3 direction)
     {
         if (direction == Vector3.zero)
+        {
+            character.AnimationComponent.SetValue("Movement", 0);
             return;
+        }
+
 
         float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
         Vector3 move = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
-
         characterData.CharacterController.Move(move * Speed * Time.deltaTime);
+
+        character.AnimationComponent.SetValue("Movement", direction.magnitude);
     }
 
     public void Rotation(Vector3 direction)

@@ -30,7 +30,7 @@ public class CharacterSpawnController : MonoBehaviour
 
         // Увеличение максимального количества врагов каждую минуту
         maxEntityNumberAtTime = gameData.MaxEntityNumberAtTime + Mathf.FloorToInt(gameSessionTime / 2);
-        Debug.Log(maxEntityNumberAtTime);
+        //Debug.Log(maxEntityNumberAtTime);
         if (timeBetweenEnemySpawn < 0)
         {
             if (entityNumberAtTime < maxEntityNumberAtTime)
@@ -44,7 +44,7 @@ public class CharacterSpawnController : MonoBehaviour
     private void SpawnEnemy()
     {
         Character enemy = characterFactory.GetCharacter(CharacterType.EnemyDefault);
-        Vector3 playerPosition = characterFactory.Player.transform.position;
+        Vector3 playerPosition = characterFactory.PlayerCharacter.transform.position;
         enemy.transform.position = new Vector3(playerPosition.x + GetOffset(), 0, playerPosition.z + GetOffset());
         enemy.gameObject.SetActive(true);
         enemy.Initialize();

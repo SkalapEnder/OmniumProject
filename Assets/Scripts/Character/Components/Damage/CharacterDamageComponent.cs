@@ -9,9 +9,10 @@ public class CharacterDamageComponent : IDamageComponent
 
     private float _damage;
     private float _range;
+    private float _cooldown;
 
     public float Damage => _damage;
-
+    public float Cooldown => _cooldown;
     public float AttackRange => _range;
 
     public void Initialize(Character character)
@@ -21,6 +22,7 @@ public class CharacterDamageComponent : IDamageComponent
 
         _damage = characterData.DefaultDamage;
         _range = characterData.DefaultRange;
+        _cooldown = characterData.TimeBetweenAttacks;
     }
 
     public void MakeDamage(Character characterTarget)

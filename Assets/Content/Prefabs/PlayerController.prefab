@@ -73,13 +73,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b39f062f9c43e8143aa93d435ddfb4fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 8
-  health: 100
-  maxHealth: 100
-  damage: 5
+  speed: 6
+  health: 200
+  maxHealth: 200
+  invicibleCooldown: 1
+  isImmortal: 0
+  viewDistance: 10
   rangeOfAttack: 1000
-  timeBetweenAttacks: 1
+  damage: 5
+  timeBetweenAttacks: 0.2
   scoreCost: 1
+  XPCost: 1
   characterTransform: {fileID: 9132835433383086122}
   characterController: {fileID: 553762904474753076}
 --- !u!114 &7965442834301781459

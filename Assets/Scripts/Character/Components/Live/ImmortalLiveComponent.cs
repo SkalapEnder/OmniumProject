@@ -5,14 +5,18 @@ using UnityEngine;
 
 public class ImmortalLiveComponent : ILiveComponent
 {
-    public float MaxHealth => 1;
+    public float MaxHealth => 100;
 
-    public float Health => 1;
+    public float Health => 100;
 
     public bool IsAlive => true;
 
-    public event Action<Character> OnCharacterDeath;
+    public float InvicibleCooldown => 1;
 
+    float ILiveComponent.Health { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+    public event Action<Character> OnCharacterDeath;
+    public event Action<Character> OnCharacterHealthChange;
     public void Initialize(Character character)
     {
 
@@ -21,5 +25,15 @@ public class ImmortalLiveComponent : ILiveComponent
     public void SetDamage(float damage)
     {
         //Debug.Log("I am immortal!");
+    }
+
+    public void SetInvicibleCooldown(float cooldown)
+    {
+        
+    }
+
+    public void SetInvicibleCooldown()
+    {
+        
     }
 }

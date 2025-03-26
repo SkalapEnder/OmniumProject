@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb99198bd57106541a60d2c04a8eb11b, type: 3}
+  m_Name: Audio Library
+  m_EditorClassIdentifier: 
+  _audioMixerGroupDatas:
+  - _audioType: 2
+    _audioMixerGroup: {fileID: 4139910631948519070, guid: a1c567f9d478c64449dac47a4e877c80, type: 2}
+  - _audioType: 1
+    _audioMixerGroup: {fileID: -5095155263506260439, guid: a1c567f9d478c64449dac47a4e877c80, type: 2}
+  - _audioType: 3
+    _audioMixerGroup: {fileID: 3986923869543101715, guid: a1c567f9d478c64449dac47a4e877c80, type: 2}
+  _ambientLibrary: {fileID: 11400000, guid: ebbda0b709ab0c448a099f564a330c4e, type: 2}
+  _uiSoundsLibrary: {fileID: 11400000, guid: 593f547323afc7c4f9b99f4f080c9f84, type: 2}
+  _soundsLibrary: {fileID: 11400000, guid: d85a1c6bcea764548927f1da0f3da28b, type: 2}

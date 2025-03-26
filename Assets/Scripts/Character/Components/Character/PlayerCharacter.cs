@@ -1,11 +1,18 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
+using UnityEngine.InputSystem;
 
 public class PlayerCharacter : Character
 {
-    public override Character TargetCharacter 
+    public CinemachineVirtualCamera m_Camera { get; set; }
+    [SerializeField] private float intensityShake;
+    [SerializeField] private float timeShake;
+    private CinemachineBasicMultiChannelPerlin m_MultiChannelPerlin;
+    private float timer;
+
+    public override Character Target 
     { 
         get
         {
@@ -36,44 +43,51 @@ public class PlayerCharacter : Character
     {
         base.Initialize();
 
-        LiveComponent = new ImmortalLiveComponent();
-        LiveComponent.Initialize(this);
+        CharacterInput = GetComponent<PlayerInput>();
+        AudioSource = GetComponent<AudioSource>();
 
-        DamageComponent = new CharacterDamageComponent();
-        DamageComponent.Initialize(this);
+        InputService = new PlayerInputService();
+        InputService.Initialize(this);
 
-        //ControlComponent = new PlayerControlComponent();
-        //ControlComponent.Initialize(this);
+        AttackComponent = new WeaponAttackComponent();
+        AttackComponent.Initialize(this);
+
+        ControlComponent = new PlayerControlComponent();
+        ControlComponent.Initialize(this);
+
+        m_Camera = Camera.main.GetComponent<CinemachineVirtualCamera>();
+        m_MultiChannelPerlin = m_Camera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        m_Camera.LookAt = transform;
+        m_Camera.Follow = transform;
+
+
+
+        //DamageComponent = new CharacterDamageComponent();
+        //DamageComponent.Initialize(this);
     }
 
     public override void Update()
     {
-        // Disable Movement if Player is Dead
-        if (LiveComponent.IsAlive) 
+        if (!LiveComponent.IsAlive || !GameManager.Instance.IsGameActive) 
         {
-            float horizontal = Input.GetAxisRaw("Horizontal");
-            float vertical = Input.GetAxisRaw("Vertical");
-
-            Vector3 movementVector = new Vector3(horizontal, 0, vertical).normalized;
-
-            if (TargetCharacter == null)
-            {
-                MovementComponent.Rotation(movementVector);
-            }
-            else
-            {
-                Vector3 rotationDirection = TargetCharacter.transform.position - transform.position;
-                MovementComponent.Rotation(rotationDirection);
-
-                if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    Debug.Log("Attack!");
-                    DamageComponent.MakeDamage(TargetCharacter);
-                }
-            }
-
-            MovementComponent.Move(movementVector);
+            return;
         }
-        //ControlComponent.OnUpdate();
+
+        InputService.OnUpdate();
+        ControlComponent.OnUpdate();
+
+        if (timer < 0)
+        {
+            if(m_MultiChannelPerlin.m_AmplitudeGain != 0f)
+                m_MultiChannelPerlin.m_AmplitudeGain = 0f;
+            return;
+        }
+        timer -= Time.deltaTime;
+    }
+
+    public override void CameraShake()
+    {
+        timer = timeShake;
+        m_MultiChannelPerlin.m_AmplitudeGain = intensityShake;
     }
 }

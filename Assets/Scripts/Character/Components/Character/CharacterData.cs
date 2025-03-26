@@ -8,6 +8,8 @@ public class CharacterData : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float health;
     [SerializeField] private float maxHealth;
+    [SerializeField] private float invicibleCooldown;
+    [SerializeField] private bool isImmortal;
 
     [Space(10)]
     [Header("Range settings")]
@@ -22,6 +24,10 @@ public class CharacterData : MonoBehaviour
     [Space(10)]
     [Header("Other settings")]
     [SerializeField] private int scoreCost;
+    [SerializeField] private int xpCost;
+
+    [SerializeField] private Animator animator;
+    [SerializeField] private WeaponData starterWeaponData;
     [SerializeField] private Transform characterTransform;
     [SerializeField] private CharacterController characterController;
 
@@ -37,12 +43,15 @@ public class CharacterData : MonoBehaviour
     public float DefaultSpeed => speed;
     public float DefaultHealth => health;
     public float DefaultMaxHealth => maxHealth;
+    public bool IsImmortal => isImmortal;
+    public float InvicibleCooldown => invicibleCooldown;
     
     // Others Section
     public int ScoreCost => scoreCost;
+    public int XPCost => xpCost;
     public Transform CharacterTransform => characterTransform;
-    public CharacterController CharacterController
-    { 
-        get { return characterController; } 
-    }
+    public CharacterController CharacterController => characterController;
+    public Animator Animator => animator;
+    public WeaponData StarterWeaponData => starterWeaponData;
+
 }

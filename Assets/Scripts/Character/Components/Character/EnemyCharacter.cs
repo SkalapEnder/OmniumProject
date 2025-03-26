@@ -7,18 +7,23 @@ public class EnemyCharacter : Character
 {
     [SerializeField] private AiState currentState;
 
-    public override Character TargetCharacter => 
-        GameManager.Instance.CharacterFactory.Player;
+    public override Character Target => 
+        GameManager.Instance.CharacterFactory.PlayerCharacter;
+
+    public override void CameraShake()
+    {
+       
+    }
 
     public override void Initialize()
     {
         base.Initialize();
 
-        LiveComponent = new CharacterLiveComponent();
-        LiveComponent.Initialize(this);
+        AttackComponent = new EnemyHandedAttackComponent();
+        AttackComponent.Initialize(this);
 
-        DamageComponent = new CharacterDamageComponent();
-        DamageComponent.Initialize(this);
+        //DamageComponent = new CharacterDamageComponent();
+        //DamageComponent.Initialize(this);
 
         LogicComponent = new EnemyLogicComponent();
         LogicComponent.Initialize(this);
@@ -26,7 +31,10 @@ public class EnemyCharacter : Character
 
     public override void Update()
     {
-        // Use pointer to change currentState there, not in LogicComponent
-        LogicComponent.checkState(TargetCharacter, ref currentState);
+        if (!LiveComponent.IsAlive
+            || !GameManager.Instance.IsGameActive)
+            return;
+
+        LogicComponent.OnUpdate();
     }
 }

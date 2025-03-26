@@ -10,11 +10,13 @@ public class CharacterFactory : MonoBehaviour
     private Dictionary<CharacterType, Queue<Character>> disabledCharacters =
         new Dictionary<CharacterType, Queue<Character>>();
 
+    public Dictionary<CharacterType, Queue<Character>> DisabledCharacters => disabledCharacters;
+
     private List<Character> activeCharacters = new List<Character>();
 
     public List<Character> ActiveCharacters => activeCharacters;
 
-    public Character Player
+    public Character PlayerCharacter
     {
         get; private set;
     }
@@ -44,6 +46,24 @@ public class CharacterFactory : MonoBehaviour
         return character;
     }
 
+    public void DeleteAllCharacters()
+    {
+        foreach (Character character in activeCharacters)
+        {
+            Destroy(character.gameObject);
+        }
+        activeCharacters.Clear();
+
+        foreach (var queue in disabledCharacters.Values)
+        {
+            while (queue.Count > 0)
+            {
+                Destroy(queue.Dequeue().gameObject);
+            }
+        }
+        disabledCharacters.Clear();
+    }
+
     public void ReturnCharacter(Character character)
     {
         Queue<Character> characters = disabledCharacters[character.CharacterType];
@@ -58,7 +78,7 @@ public class CharacterFactory : MonoBehaviour
         switch (type){
             case CharacterType.Player:
                 character = GameObject.Instantiate(playerCharacterPrefab, null);
-                Player = character;
+                PlayerCharacter = character;
                 break;
             case CharacterType.EnemyDefault:
                 character = GameObject.Instantiate(enemyCharacterPrefab, null);

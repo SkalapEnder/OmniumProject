@@ -4,75 +4,66 @@ using UnityEngine;
 
 public class EnemyLogicComponent : ILogicComponent
 {
+    private AiState aiState;
     private Character character;
-    private CharacterData characterData;
+    private float TARGET_DISTANCE;
 
-    private float cooldownAttack = 0.0f;
-    private Vector3 direction;
-    private float _attackRange;
-    private float _viewRange;
+    private IMovable MovementComponent =>
+        character.MovementComponent;
+
+    private IAttackComponent AttackComponent =>
+        character.AttackComponent;
 
     public void Initialize(Character character)
     {
         this.character = character;
-        characterData = character.CharacterData;
-        _attackRange = character.DamageComponent.AttackRange;
-        _viewRange = characterData.DefaultView;
+        aiState = AiState.MoveToTarget;
+        TARGET_DISTANCE = character.CharacterData.DefaultRange;
     }
 
-    public void checkState(Character targetCharacter, ref AiState currentState)
+    public void OnUpdate()
     {
-        // Condition to check target's death
-        if (!targetCharacter.LiveComponent.IsAlive)
+        if (character.Target == null || !character.Target.gameObject.activeSelf)
+            return;
+
+        Vector3 direction = character.Target.transform.position
+            - character.CharacterData.CharacterTransform.position;
+
+
+        switch (aiState)
         {
-            currentState = AiState.None; return;
-        }
-
-        float distance = Vector3.Distance(targetCharacter.transform.position, character.transform.position);
-        direction = (targetCharacter.transform.position - character.transform.position).normalized;
-
-        switch (currentState)
-        {
-            case AiState.None:
-                break;
-
             case AiState.Idle:
-                if (distance < _viewRange)
-                {
-                    currentState = AiState.MoveToTarget;
-                }
-                break;
+
+                return;
 
             case AiState.MoveToTarget:
-                character.MovementComponent.Move(direction);
-                character.MovementComponent.Rotation(direction);
+                direction = direction.normalized;
+                MovementComponent.Move(direction);
+                MovementComponent.Rotation(direction);
+                if (Vector3.Distance(character.Target.transform.position,
+                        character.CharacterData.CharacterTransform.position)
+                    <= TARGET_DISTANCE)
+                {
+                    aiState = AiState.Attack;
+                }
 
-                if (distance >= _viewRange)
-                {
-                    currentState = AiState.Idle;
-                }
-                else if (distance < _attackRange)
-                {
-                    currentState = AiState.Attack;
-                }
-                break;
+                return;
+
 
             case AiState.Attack:
-                character.MovementComponent.Rotation(direction);
+                MovementComponent.Move(Vector3.zero);
 
-                if (cooldownAttack <= 0)
-                {
-                    character.DamageComponent.MakeDamage(targetCharacter);
-                    cooldownAttack = characterData.TimeBetweenAttacks;
-                }
+                direction = direction.normalized;
+                MovementComponent.Rotation(direction);
 
-                cooldownAttack = Mathf.Max(0, cooldownAttack - Time.deltaTime);
+                AttackComponent.MakeAttack();
 
-                if (distance >= _attackRange)
-                {
-                    currentState = AiState.MoveToTarget;
-                }
-                break;
+                if (Vector3.Distance(character.Target.transform.position,
+                        character.CharacterData.CharacterTransform.position)
+                    > TARGET_DISTANCE)
+                    aiState = AiState.MoveToTarget;
+                return;
+
         }
     }
 }
