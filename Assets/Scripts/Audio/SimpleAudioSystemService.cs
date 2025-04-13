@@ -50,9 +50,10 @@ public class SimpleAudioSystemService : AudioSystemService
             return;
 
         var group = _mixerGroups[type];
+        int masterCoef = isMasterEnabled ? 1 : 0;
 
         if (!group.audioMixer.SetFloat(type.ToString(),
-                Mathf.Lerp(DB_MINIMUM, DB_MAXIMUM, volume)))
+                Mathf.Lerp(DB_MINIMUM, DB_MAXIMUM, volume * masterCoef)))
         {
             Debug.LogError($"Not found {type.ToString()} audio type!");
         }
@@ -60,7 +61,7 @@ public class SimpleAudioSystemService : AudioSystemService
 
     public override void SetVolume(AudioSystemType type, bool status)
     {
-        SetVolume(type, status ? 1 : 0);
+        SetVolume(type, status && isMasterEnabled ? 1 : 0);
     }
 
     public override AudioMixerGroup GetAudioMixerGroup(AudioSystemType type)
@@ -108,11 +109,11 @@ public class SimpleAudioSystemService : AudioSystemService
     public override float GetVolume(AudioSystemType type)
     {
         if (!isInitialized)
-            return 0;
+            return DB_MINIMUM;
 
         var group = _mixerGroups[type];
         float volume; 
-        group.audioMixer.GetFloat("MasterVolume", out volume);
+        group.audioMixer.GetFloat(type.ToString(), out volume);
 
         return volume;
     }
@@ -123,8 +124,8 @@ public class SimpleAudioSystemService : AudioSystemService
 
         if (isMasterEnabled) // Muting the sound
         {
-            audioMixer.audioMixer.GetFloat(audioMixer.audioMixer.ToString(), out lastVolume);
-            audioMixer.audioMixer.SetFloat(audioMixer.audioMixer.ToString(), -80f);
+            audioMixer.audioMixer.GetFloat(AudioSystemType.Master.ToString(), out lastVolume);
+            audioMixer.audioMixer.SetFloat(AudioSystemType.Master.ToString(), DB_MINIMUM);
         }
         else // Unmuting the sound
         {

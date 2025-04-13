@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3880902620667128727}
+  - component: {fileID: 2664632469377950404}
   m_Layer: 0
   m_Name: SmokeCars
   m_TagString: Untagged
@@ -35,6 +36,27 @@ Transform:
   - {fileID: 7072098063708140783}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2664632469377950404
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1803487648819985393}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 7.9328938, y: 6.6990414, z: 12.292241}
+  m_Center: {x: 0.84257793, y: 2.8495207, z: -1.7475629}
 --- !u!1 &6061804392770739108
 GameObject:
   m_ObjectHideFlags: 0

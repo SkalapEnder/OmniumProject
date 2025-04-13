@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -44,9 +45,7 @@ public class Affecter : MonoBehaviour
 
 
     // _Speed - скорость по оси _
-    public int xSpeed = 20;  // Поставил 20 - не слишком медленно и не слишком быстро
-    public int ySpeed = 20;
-    public int zSpeed = 20;
+    public int Speed;
 
     // Список (массив) кубов
     public GameObject[] objects;
@@ -67,14 +66,7 @@ public class Affecter : MonoBehaviour
         {
             foreach (GameObject obj in objects)
             {
-                obj.transform.position += Vector3.up * ySpeed * Time.deltaTime;
-
-                if (obj.transform.position.y >= 5)
-                {
-                    Vector3 PostZ = new Vector3(obj.transform.position.x, 5, obj.transform.position.z);
-                    obj.transform.position = PostZ;
-                }
-
+                obj.GetComponent<Rigidbody>().AddForce(Vector3.up * Speed * Time.deltaTime);
             }
         }
 
@@ -82,13 +74,7 @@ public class Affecter : MonoBehaviour
         {
             foreach (GameObject obj in objects)
             {
-                obj.transform.position -= Vector3.up * ySpeed * Time.deltaTime;
-
-                if (obj.transform.position.y <= -5)
-                {
-                    Vector3 PostZ = new Vector3(obj.transform.position.x, -5, obj.transform.position.z);
-                    obj.transform.position = PostZ;
-                }
+                obj.GetComponent<Rigidbody>().AddForce(Vector3.down * Speed * 10 * Time.deltaTime);
             }
         }
 
@@ -97,23 +83,8 @@ public class Affecter : MonoBehaviour
         {
             foreach (GameObject obj in objects)
             {
-                // Создаю новый вектор только по Х оси
-                // Т.к. position принимает только вектора
-                // По каждой оси только Read-Only значения
-                // Тоже самое и с осью Z
-                Vector3 newPostX = new Vector3(xSpeed * horizontal * Time.deltaTime, 0, 0);
-                obj.transform.position += newPostX;
-
-                if (obj.transform.position.x >= 5)
-                {
-                    Vector3 PostZ = new Vector3(5, obj.transform.position.y, obj.transform.position.z);
-                    obj.transform.position = PostZ;
-                }
-                else if (obj.transform.position.x <= -5)
-                {
-                    Vector3 PostZ = new Vector3(-5, obj.transform.position.y, obj.transform.position.z);
-                    obj.transform.position = PostZ;
-                }
+                Vector3 newPostX = new Vector3(Speed * horizontal * Time.deltaTime, 0, 0);
+                obj.GetComponent<Rigidbody>().AddForce(newPostX);
             }
         }
 
@@ -122,18 +93,8 @@ public class Affecter : MonoBehaviour
         {
             foreach (GameObject obj in objects)
             {
-                Vector3 newPostZ = new Vector3(0, 0, zSpeed * vertical * Time.deltaTime);
-                obj.transform.position += newPostZ;
-                if (obj.transform.position.z >= 5)
-                {
-                    Vector3 PostZ = new Vector3(obj.transform.position.x, obj.transform.position.y, 5);
-                    obj.transform.position = PostZ;
-                }
-                else if (obj.transform.position.z <= -5)
-                {
-                    Vector3 PostZ = new Vector3(obj.transform.position.x, obj.transform.position.y, -5);
-                    obj.transform.position = PostZ;
-                }
+                Vector3 newPostZ = new Vector3(0, 0, Speed * vertical * Time.deltaTime);
+                obj.GetComponent<Rigidbody>().AddForce(newPostZ);
             }
         }
 
@@ -142,7 +103,7 @@ public class Affecter : MonoBehaviour
         {
             foreach (GameObject obj in objects)
             {
-                obj.transform.Rotate(2f, 0, 0);
+                obj.GetComponent<Rigidbody>().AddTorque(Vector3.right * Speed * 1000000);
             }
         }
 
@@ -164,11 +125,12 @@ public class Affecter : MonoBehaviour
         }
 
         // Рандомизация позиции
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyUp(KeyCode.G))
         {
             foreach (GameObject obj in objects)
             {
                 obj.transform.position = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+                obj.GetComponent<Rigidbody>().velocity = Vector3.zero;
             }
         }
     }

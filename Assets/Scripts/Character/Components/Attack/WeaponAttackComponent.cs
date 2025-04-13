@@ -8,7 +8,7 @@ public class WeaponAttackComponent : IAttackComponent
     private Character character;
     private WeaponData currentWeaponData;
     private float timeBetweenAttack;
-
+    private float attackMult = 1f;
     public float Damage => currentWeaponData.WeaponDamage;
     public float AttackRange => currentWeaponData.AttackRange;
 
@@ -29,6 +29,8 @@ public class WeaponAttackComponent : IAttackComponent
         if (distance > currentWeaponData.AttackRange)
             return;
 
+        attackMult = GameManager.Instance.IsDamageBoostEnabled ? 1.2f : 1f;
+
         character.AnimationComponent.SetTrigger("Attack");
         timeBetweenAttack = currentWeaponData.TimeBetweenAttack;
         PlayGunShotSound();
@@ -39,7 +41,7 @@ public class WeaponAttackComponent : IAttackComponent
         projectile.transform.position = character.transform.position + character.transform.forward + Vector3.up;
 
         projectile.transform.rotation = character.CharacterData.CharacterTransform.rotation;
-        projectile.Initialize(this.character, Damage, 9000,
+        projectile.Initialize(this.character, Damage * attackMult, 9000,
             (character.Target.transform.position - character.transform.position).normalized);
     }
 

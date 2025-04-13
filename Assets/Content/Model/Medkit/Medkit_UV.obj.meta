@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1187182b78694ba4caea0041066c9167
+guid: b6382085583cf4f4e86d8e0a0ccbc5a2
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,53 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Rifle_Base_group1Mat
-    second: {fileID: 2100000, guid: 8896e5dab197a154b82d563b36732351, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: group1_Riffle_MagazineMat
-    second: {fileID: 2100000, guid: cbfe0653618b11247b1fc72286b980e5, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: group1_Rifle_Aim_pCube3Mat
-    second: {fileID: 2100000, guid: cbfe0653618b11247b1fc72286b980e5, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: group1_Rifle_Aim_pCube8Mat
-    second: {fileID: 2100000, guid: cbfe0653618b11247b1fc72286b980e5, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: group1_Rifle_Brench_pCube5Mat
-    second: {fileID: 2100000, guid: 8896e5dab197a154b82d563b36732351, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: group1_Rifle_FuseMat
-    second: {fileID: 2100000, guid: cbfe0653618b11247b1fc72286b980e5, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: group1_Rifle_MuzzleMat
-    second: {fileID: 2100000, guid: cbfe0653618b11247b1fc72286b980e5, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: group1_Rifle_TriggerMat
-    second: {fileID: 2100000, guid: 8896e5dab197a154b82d563b36732351, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: group1_pCube6_Rifle_BrenchMat
-    second: {fileID: 2100000, guid: 8896e5dab197a154b82d563b36732351, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: group1_pCube7_Rifle_AimMat
-    second: {fileID: 2100000, guid: cbfe0653618b11247b1fc72286b980e5, type: 2}
+      name: pCube1Mat
+    second: {fileID: 2100000, guid: 20c890e6ae22c2d45b8beabff12bbc6c, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -85,7 +40,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.08
+    globalScale: 1.25
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -128,7 +83,7 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 1
+  importAnimation: 0
   humanDescription:
     serializedVersion: 3
     human: []
@@ -140,14 +95,14 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.08
+    globalScale: 1.25
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1

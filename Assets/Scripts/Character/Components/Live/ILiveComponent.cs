@@ -21,4 +21,6 @@ public interface ILiveComponent : ICharacterComponent
     public void SetInvicibleCooldown(float cooldown);
 
     public void SetInvicibleCooldown();
+
+    public void Heal(float heal);
 }

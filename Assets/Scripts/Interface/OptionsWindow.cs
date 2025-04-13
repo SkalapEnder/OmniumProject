@@ -52,7 +52,7 @@ public class OptionsWindow : Window
 
     private void OnClearProgressButtonPressed()
     {
-        GameManager.Instance.ScoreSystem.ClearProgress();
+        GameManager.Instance.ClearProgress();
     }
 
     protected override void OpenStart() 
@@ -60,6 +60,7 @@ public class OptionsWindow : Window
         base.OpenStart();
         ClearProgressButton.interactable = GameManager.Instance.IsGameActive ? false : true;
         JoystickSlider.value = GameManager.Instance.ControlSettingManager.JoystickCircleOpacity;
+
         MasterSoundSlider.value = GameManager.Instance.AudioService.GetVolume(AudioSystemType.Master);
         GameSoundSlider.value = GameManager.Instance.AudioService.GetVolume(AudioSystemType.Sounds);
         AmbientSoundSlider.value = GameManager.Instance.AudioService.GetVolume(AudioSystemType.Ambient);

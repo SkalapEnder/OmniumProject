@@ -11,6 +11,7 @@ public class PlayerCharacter : Character
     [SerializeField] private float timeShake;
     private CinemachineBasicMultiChannelPerlin m_MultiChannelPerlin;
     private float timer;
+    private float regenTimer = 2f;
 
     public override Character Target 
     { 
@@ -68,21 +69,30 @@ public class PlayerCharacter : Character
 
     public override void Update()
     {
-        if (!LiveComponent.IsAlive || !GameManager.Instance.IsGameActive) 
+        if (!LiveComponent.IsAlive || !GameManager.Instance.IsGameActive)
         {
             return;
         }
+
+        if(LiveComponent.Health - LiveComponent.MaxHealth < 1) 
+            regenTimer -= Time.deltaTime;
 
         InputService.OnUpdate();
         ControlComponent.OnUpdate();
 
-        if (timer < 0)
+        if (GameManager.Instance.IsHealingEnabled && regenTimer <= 0)
         {
-            if(m_MultiChannelPerlin.m_AmplitudeGain != 0f)
-                m_MultiChannelPerlin.m_AmplitudeGain = 0f;
-            return;
+            LiveComponent.Heal(1);
+            regenTimer = 2f;
         }
-        timer -= Time.deltaTime;
+
+        //if (timer < 0)
+        //{
+        //    if(m_MultiChannelPerlin.m_AmplitudeGain != 0f)
+        //        m_MultiChannelPerlin.m_AmplitudeGain = 0f;
+        //    return;
+        //}
+        //timer -= Time.deltaTime;
     }
 
     public override void CameraShake()

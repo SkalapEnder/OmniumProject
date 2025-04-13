@@ -6,8 +6,11 @@ public class GameManager : MonoBehaviour
 {
     [Header("Gameplay")]
     [SerializeField] private LevelManager levelManager;
+    [SerializeField] private SkillService skillService;
     [SerializeField] private CharacterFactory characterFactory;
     [SerializeField] private GameData gameData;
+    [SerializeField] private Transform upperLeftEnd;
+    [SerializeField] private Transform lowerRightEnd;
 
     [Space(10), Header("UI & Settings")]
     [SerializeField] private ControlSettingManager controlSettingManager;
@@ -42,7 +45,13 @@ public class GameManager : MonoBehaviour
     public SimpleAudioSystemService AudioService => audioService;
     public LevelManager LevelManager => levelManager;
 
+    public bool IsHealingEnabled = false;
+    public bool IsXPBoostEnabled = false;
+    public bool IsDamageBoostEnabled = false;
+    public bool IsAddHPEnabled = false;
+
     public GameData ChosenLevel { get; private set; }
+    public int MaxItemNumber { get; set; } = 5;
     private bool isGameActive = false;
     private bool isGamePaused = false;
     private float gameTimeSeconds = 0;
@@ -51,8 +60,11 @@ public class GameManager : MonoBehaviour
     public bool IsGameActive => isGameActive;
 
     private float gameSessionTime;
+    private float timeBetweenItemSpawn;
     private float timeBetweenEnemySpawn;
+
     private int entityNumberAtTime;
+    private int itemNumberAtTime;
     private int maxEntityNumberAtTime;
 
     private void Awake()
@@ -72,11 +84,13 @@ public class GameManager : MonoBehaviour
     private void Initialize()
     {
         ScoreSystem = new ScoreSystem();
-        //InputService = new NewInputService();
         windowsService.Initialize();
         controlSettingManager.Initialize();
         soundManager.Initialize();
+
+        skillService.Initialize();
         levelManager.Initialize();
+
         isGameActive = false;
     }
 
@@ -87,6 +101,7 @@ public class GameManager : MonoBehaviour
         ScoreSystem.CurrentLevel = levelManager.selectedLevel;
         characterFactory.DeleteAllCharacters();
         windowsService.HideAllWindow(false);
+        ChosenLevel = levelManager.selectedLevel.LevelData;
 
         Character player = characterFactory.GetCharacter(CharacterType.Player);
         player.transform.position = Vector3.zero;
@@ -96,9 +111,11 @@ public class GameManager : MonoBehaviour
 
         gameTimeSeconds = 0;
         gameSessionTime = 0;
-        timeBetweenEnemySpawn = gameData.TimeBetweenEnemySpawn;
+        timeBetweenEnemySpawn = ChosenLevel.TimeBetweenEnemySpawn;
+        timeBetweenItemSpawn = ChosenLevel.TimeBetweenItemSpawn;
         entityNumberAtTime = 1;
-        maxEntityNumberAtTime = gameData.MaxEntityNumberAtTime;
+        itemNumberAtTime = 0;
+        maxEntityNumberAtTime = ChosenLevel.MaxEntityNumberAtTime;
 
         ScoreSystem.StartGame();
         audioService.ToggleAmbientSound(AmbientType.MainMenuAmbient, ambientSource, true);
@@ -108,19 +125,22 @@ public class GameManager : MonoBehaviour
 
     public void StopGame()
     {
-        audioService.ToggleAmbientSound(AmbientType.MainMenuAmbient, ambientSource, false);
         characterFactory.DeleteAllCharacters();
         effectsFactory.RemoveAll();
+
+        audioService.ToggleAmbientSound(AmbientType.MainMenuAmbient, ambientSource, false);
         windowsService.HideAllWindow(false);
+
         ScoreSystem.EndGameLoose();
         isGameActive = false;
     }
 
     public void LeaveGame()
     {
-        audioService.ToggleAmbientSound(AmbientType.MainMenuAmbient, ambientSource, false);
         characterFactory.DeleteAllCharacters();
         effectsFactory.RemoveAll();
+
+        audioService.ToggleAmbientSound(AmbientType.MainMenuAmbient, ambientSource, false);
         windowsService.HideAllWindow(false);
         isGameActive = false;
     }
@@ -129,13 +149,14 @@ public class GameManager : MonoBehaviour
     {
         if (isGamePaused)
         {
-            audioService.ToggleAmbientSound(AmbientType.MainMenuAmbient, ambientSource, true);
+            audioService.SetVolume(AudioSystemType.Ambient, false);
             Time.timeScale = 1.0f;
             isGamePaused = false;
             windowsService.HideWindow<PauseWindow>(false);
             return;
         }
-        audioService.ToggleAmbientSound(AmbientType.MainMenuAmbient, ambientSource, false);
+
+        audioService.SetVolume(AudioSystemType.Ambient, true);
         Time.timeScale = 0.0f;
         windowsService.ShowWindow<PauseWindow>(false);
         isGamePaused = true;
@@ -149,16 +170,22 @@ public class GameManager : MonoBehaviour
         gameTimeSeconds += Time.deltaTime;
         gameSessionTime += Time.deltaTime;
         timeBetweenEnemySpawn -= Time.deltaTime;
+        timeBetweenItemSpawn -= Time.deltaTime;
 
-        maxEntityNumberAtTime = gameData.MaxEntityNumberAtTime + Mathf.FloorToInt(gameSessionTime / 5);
+        maxEntityNumberAtTime = ChosenLevel.MaxEntityNumberAtTime + Mathf.FloorToInt(gameSessionTime / 5);
+
+        if(timeBetweenItemSpawn < 0 && itemNumberAtTime < MaxItemNumber)
+        {
+            // Item spawn;
+        }
 
         if (timeBetweenEnemySpawn < 0 && entityNumberAtTime < maxEntityNumberAtTime)
         {
             SpawnEnemy();
-            timeBetweenEnemySpawn = gameData.TimeBetweenEnemySpawn;
+            timeBetweenEnemySpawn = ChosenLevel.TimeBetweenEnemySpawn;
         }
 
-        if (gameTimeSeconds > gameData.SessionTimeSeconds)
+        if (gameTimeSeconds > ChosenLevel.SessionTimeSeconds)
         {
             GameVictory();
         }
@@ -168,7 +195,23 @@ public class GameManager : MonoBehaviour
     {
         Character enemy = characterFactory.GetCharacter(CharacterType.EnemyDefault);
         Vector3 playerPosition = characterFactory.PlayerCharacter.transform.position;
-        enemy.transform.position = new Vector3(playerPosition.x + GetOffset(), 0, playerPosition.z + GetOffset());
+
+        bool isPositionCorrect = false;
+        Vector3 enemyPosition = Vector3.zero;
+
+        while (!isPositionCorrect)
+        {
+            enemyPosition = new Vector3(playerPosition.x + GetOffset(), 0, playerPosition.z + GetOffset());
+            if((enemyPosition.x < upperLeftEnd.position.x || enemyPosition.z > upperLeftEnd.position.z) || 
+                (enemyPosition.x > lowerRightEnd.position.x || enemyPosition.z < lowerRightEnd.position.z))
+            {
+                return;
+            }
+
+            isPositionCorrect = true;
+        }
+       
+        enemy.transform.position = enemyPosition;
         enemy.gameObject.SetActive(true);
         enemy.Initialize();
         enemy.LiveComponent.OnCharacterDeath += CharacterDeathHandler;
@@ -177,7 +220,7 @@ public class GameManager : MonoBehaviour
         float GetOffset()
         {
             bool isPlus = Random.Range(0, 100) % 2 != 0;
-            float offset = Random.Range(gameData.MinEnemySpawnOffset, gameData.MaxEnemySpawnOffset);
+            float offset = Random.Range(ChosenLevel.MinEnemySpawnOffset, ChosenLevel.MaxEnemySpawnOffset);
             return ((isPlus) ? offset : (-1 * offset));
         }
     }
@@ -197,7 +240,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Enemy Defeated");
             ScoreSystem.AddScore(deadCharacter.CharacterData.ScoreCost);
-            ScoreSystem.AddXP(deadCharacter.CharacterData.XPCost);
+            ScoreSystem.AddXP((int)(deadCharacter.CharacterData.XPCost * (IsXPBoostEnabled ? 1.2f : 1f)));
         }
     }
 
@@ -216,5 +259,12 @@ public class GameManager : MonoBehaviour
         windowsService.HideWindow<GameplayWindow>(true);
         windowsService.ShowWindow<LooseWindow>(false);
         isGameActive = false;
+    }
+
+    public void ClearProgress()
+    {
+        ScoreSystem.ClearProgress();
+        skillService.CancelSkills();
+        levelManager.ResetProgress();
     }
 }

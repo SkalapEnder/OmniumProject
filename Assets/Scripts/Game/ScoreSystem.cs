@@ -51,8 +51,8 @@ public class ScoreSystem
     public ScoreSystem() 
     {
         coinsGlobal = PlayerPrefs.GetInt(GLOBAL_COINS, 0);
-        xpGlobal = PlayerPrefs.GetInt(GLOBAL_XP);
-        xpLevelGlobal = PlayerPrefs.GetInt(GLOBAL_XP_LEVEL);
+        xpGlobal = PlayerPrefs.GetInt(GLOBAL_XP, 0);
+        xpLevelGlobal = PlayerPrefs.GetInt(GLOBAL_XP_LEVEL, 0);
 
         for(int i = 0; i < xpLevelGlobal; i++)
         {
@@ -157,6 +157,14 @@ public class ScoreSystem
         }
     }
 
+    public void BuyShop(int spentCoins)
+    {
+        coinsGlobal -= spentCoins;
+        OnCoinsUpdated?.Invoke(coinsGlobal);
+        PlayerPrefs.SetInt(GLOBAL_COINS, coinsGlobal);
+        Debug.Log("Bought on " + spentCoins);
+    }
+
     public void ClearProgress()
     {
         PlayerPrefs.SetInt(GLOBAL_COINS, 0);
@@ -164,13 +172,14 @@ public class ScoreSystem
         PlayerPrefs.SetInt(GLOBAL_XP_LEVEL, 0);
         PlayerPrefs.Save();
 
-        coinsGlobal = 0;
+        coinsGlobal = 500;
         xpGlobal = 0;
         xpLevelGlobal = 0;
         xpMultGlobal = 1f;
 
-        OnXPUpdated?.Invoke(0);
-        OnXPLevelUpdated?.Invoke(0);
+        OnXPUpdated?.Invoke(xpGlobal);
+        OnXPLevelUpdated?.Invoke(xpLevelGlobal);
+        OnCoinsUpdated?.Invoke(coinsGlobal);
         Debug.Log("User progress is deleted!");
     }
 

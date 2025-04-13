@@ -34,7 +34,7 @@ public class GameplayWindow : Window
         experienceSlider.maxValue = 
             GameManager.Instance.LevelManager.selectedLevel.XPLevelMax;
 
-        experienceLevel.text = "0";
+        experienceLevel.text = GameManager.Instance.ScoreSystem.XPLevel.ToString();
 
         UpdateScore(GameManager.Instance.ScoreSystem.Coins);
         GameManager.Instance.ScoreSystem.OnSessionCoinsUpdated += UpdateScore;
@@ -78,13 +78,11 @@ public class GameplayWindow : Window
 
     private void UpdateScore(int scoreCount)
     {
-        Debug.Log("New Score data: " + scoreCount);
         coinsText.text = scoreCount.ToString();
     }
 
     private void UpdateXP(int earnedXP)
     {
-        Debug.Log("New XP data: " + earnedXP);
         experienceSlider.value += earnedXP;
     }
 

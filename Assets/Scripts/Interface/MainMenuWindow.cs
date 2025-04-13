@@ -21,6 +21,7 @@ public class MainMenuWindow : Window
 
         GameManager.Instance.ScoreSystem.OnXPUpdated += UpdateUserXP;
         GameManager.Instance.ScoreSystem.OnXPLevelUpdated += UpdateUserLevel;
+        GameManager.Instance.ScoreSystem.OnCoinsUpdated += UpdateUserCoins;
 
         playerScore.text = GameManager.Instance.ScoreSystem.CoinsGlobal.ToString();
         playerXP.maxValue = GameManager.Instance.ScoreSystem.XPMaxGlobal;
@@ -69,5 +70,10 @@ public class MainMenuWindow : Window
     public void UpdateUserXP(int newXP)
     {
         playerXP.value = newXP;
+    }
+
+    public void UpdateUserCoins(int newCoins)
+    {
+        playerScore.text = newCoins.ToString();
     }
 }

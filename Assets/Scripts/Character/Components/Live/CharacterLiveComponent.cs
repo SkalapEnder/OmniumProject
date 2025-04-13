@@ -65,9 +65,19 @@ public class CharacterLiveComponent : ILiveComponent
     {
         this.selfCharacter = character;
         maxHealth = character.CharacterData.DefaultMaxHealth;
+
+        if (GameManager.Instance.IsAddHPEnabled) 
+            maxHealth += 20;
+
         Health = maxHealth;
         invicibleCooldown = character.CharacterData.InvicibleCooldown;
         
+    }
+
+    public void Heal(float heal)
+    {
+        Health += heal;
+        OnCharacterHealthChange?.Invoke(selfCharacter);
     }
 
     public void SetInvicibleCooldown(float cooldown)

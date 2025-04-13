@@ -36,4 +36,9 @@ public class ImmortalLiveComponent : ILiveComponent
     {
         
     }
+
+    public void Heal(float heal)
+    {
+
+    }
 }
